@@ -1,0 +1,35 @@
+.header {
+    background: darkgray;
+}
+
+.clock-header {
+    display: flex;
+}
+
+.clock {
+    margin-left: 90px;
+}
+
+.title {
+    margin-left: 50px;
+}
+
+.logout-div {
+    margin-left: auto;
+}
+
+.logout-div>button {
+    color: #343a40;
+}
+
+.logout-div>button:hover {
+    color: black;
+}
+
+.clock-icon {
+    font-size: 30px;
+}
+
+.logout-icon {
+    font-size: 20px;
+}

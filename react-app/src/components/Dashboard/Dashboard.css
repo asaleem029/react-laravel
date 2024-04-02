@@ -1,0 +1,21 @@
+.App {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header,
+.footer {
+    background: darkgray;
+    padding: 5px;
+}
+
+.main-container {
+    display: flex;
+    flex: 1;
+}
+
+.main {
+    flex: 1;
+    background: #f7f5f5;
+}
