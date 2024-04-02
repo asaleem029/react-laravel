@@ -7,6 +7,7 @@ import Login from "../Login/Login";
 import ProtectedRoute from "../ProtectedRoutes/ProtectedRoutes";
 import UserCreateForm from "../User/UserCreateForm";
 import UserEditForm from "../User/UserEditForm";
+import UserRegistrationForm from "../UserRegistration/UserRegistrationForm";
 
 const AppRoutes = () => {
   return (
@@ -26,7 +27,8 @@ const AppRoutes = () => {
             <Route path="new-user" element={<UserCreateForm />} />
             <Route path="user-edit/:id" element={<UserEditForm />} />
           </Route>
-
+          
+          <Route path="user-registration" element={<UserRegistrationForm />} />
           <Route path="login" element={<Login />} />
         </Routes>
       </BrowserRouter>

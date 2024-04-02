@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import "./Login.css";
 import { ToastContainer, toast } from "react-toastify";
 
 async function loginUser(credentials) {
-  return fetch("http://localhost:8000/auth/login", {
+  return fetch("http://localhost:8000/api/login", {
     method: "POST",
 
     headers: {
@@ -36,19 +35,19 @@ const Login = () => {
 
     localStorage.clear();
 
-    const token = await loginUser({
+    const user = await loginUser({
       email,
       password,
     });
 
-    if (token.statusCode === 200) {
-      localStorage.setItem("auth-token", token.user);
-      toast.success(token.message, { autoClose: 1000 });
+    if (user) {
+      localStorage.setItem("auth-token", user.token);
+      toast.success(user.message, { autoClose: 1000 });
       setTimeout(() => {
         navigate("/");
       }, 1000);
     } else {
-      toast.error(token.message, { autoClose: 2000 });
+      toast.error(user.message, { autoClose: 2000 });
     }
   };
 
@@ -78,19 +77,29 @@ const Login = () => {
           </Form.Group>
 
           <Form.Group className="d-grid gap-2 mt-3">
-            <Button
-              type="submit"
-              variant="secondary"
-              disabled={!validateForm()}
-            >
-              Submit
-            </Button>
+
+            <Row className="mb-3">
+              <Col>
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  disabled={!validateForm()}
+                >
+                  Sign-In
+                </Button>
+              </Col>
+
+              <Col>
+                <Button
+                  variant="secondary"
+                  onClick={() => navigate("/user-registration")}
+                >
+                  Register
+                </Button>
+              </Col>
+            </Row>
             <ToastContainer />
           </Form.Group>
-
-          <p className="float-right mt-2">
-            <p>Sign-Up</p>
-          </p>
         </div>
       </Form>
     </div>
