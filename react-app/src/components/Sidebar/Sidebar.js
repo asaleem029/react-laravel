@@ -62,14 +62,14 @@ const SideBar = () => {
           Dashboard
         </MenuItem>
 
-        <SubMenu label="Users" icon={<FaUsers className="icon" />}>
-          <MenuItem component={<NavLink to="/users" />}>
-            <AiOutlineOrderedList className="icon" /> Users List
-          </MenuItem>
-          <MenuItem component={<NavLink to="/new-user" />}>
-            <AiOutlineUserAdd className="icon" /> Create New User
-          </MenuItem>
-        </SubMenu>
+        <MenuItem component={<NavLink to="/users" />}>
+          <FaUsers className="icon" /> Users
+        </MenuItem>
+
+        <MenuItem component={<NavLink to="/feedbacks" />}>
+          <AiOutlineOrderedList className="icon" /> Feebacks
+        </MenuItem>
+
       </Menu>
     </Sidebar>
   );
