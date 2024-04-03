@@ -12,7 +12,6 @@ import Pagination from "../Pagination/Pagination";
 const User = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
-  const [currentUser, setCurrentUser] = useState([]);
   const token = localStorage.getItem("auth-token")
 
   // PAGINATION
@@ -42,14 +41,6 @@ const User = () => {
       }
       );
     // GET USERS LIST
-
-    // // GET CURRENT USER
-    // const getCurrentUser = async () => {
-    //   setCurrentUser(user);
-    // };
-
-    // getCurrentUser();
-    // // GET CURRENT USER
   }, []);
 
   // USER DELETE
@@ -124,10 +115,10 @@ const User = () => {
           </tr>
         </thead>
         <tbody>
-          {currentTableData.map((user) => {
+          {currentTableData.map((user, index) => {
             return (
               <tr key={user.id}>
-                <td>{user.id}</td>
+                <td>{index + 1}</td>
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>{user.created_at}</td>
@@ -150,7 +141,7 @@ const User = () => {
                     onClick={async () => {
                       await handleUserDelete(user.id);
                     }}
-                    disabled={user.id === currentUser.id}
+                    disabled={user.id == localStorage.getItem("user_id")}
                   >
                     <MdDeleteForever />
                   </Button>
