@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\AuthService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class AuthController extends Controller
 {
@@ -22,5 +23,10 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         return $this->authService->login($request);
+    }
+    
+    public function logout(Request $request)
+    {
+        return $this->authService->logout();
     }
 }

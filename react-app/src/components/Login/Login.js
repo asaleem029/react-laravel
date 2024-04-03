@@ -13,7 +13,10 @@ async function loginUser(credentials) {
     },
 
     body: JSON.stringify(credentials),
-  }).then((data) => data.json());
+  }).then((data) => {
+    if (!data.ok) throw new Error(data.status);
+    else return data.json();
+  });
 }
 
 const Login = () => {
@@ -42,6 +45,7 @@ const Login = () => {
 
     if (user) {
       localStorage.setItem("auth-token", user.token);
+      localStorage.setItem("user_id", user.user.id);
       toast.success(user.message, { autoClose: 1000 });
       setTimeout(() => {
         navigate("/");

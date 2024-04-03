@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class AuthService
@@ -49,13 +50,28 @@ class AuthService
             if (Auth::attempt(['email' => $data->email, 'password' => $data->password])) {
                 $user = Auth::user();
                 $token = $user->createToken('MyApp')->accessToken;
-                
+
                 return response()->json([
                     'message' => 'Logged-In successfully',
                     'user' => $user,
                     'token' => $token
                 ], 200);
             }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function logout()
+    {
+        try {
+            $user = Auth::user()->token();
+            $user->delete();
+
+            return response()->json([
+                "status" => Auth::check(),
+                'message' => 'Successfully logged out',
+            ], 200);
         } catch (Exception $e) {
             return $e->getMessage();
         }

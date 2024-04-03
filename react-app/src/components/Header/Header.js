@@ -8,9 +8,11 @@ import { IoMdClock } from "react-icons/io";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Button, Container } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const navigate = useNavigate();
+  const token = localStorage.getItem("auth-token")
 
   function handleLogout() {
     const MySwal = withReactContent(Swal);
@@ -25,8 +27,23 @@ const Header = () => {
       confirmButtonText: "Logout",
     }).then((result) => {
       if (result.isConfirmed) {
-        localStorage.clear();
-        navigate("/login");
+        return fetch("http://localhost:8000/api/logout", {
+          method: "GET",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+        })
+          .then((data) => {
+            if (!data.ok) throw new Error(data.status);
+            else return data.json();
+          })
+          .then((response) => {
+            localStorage.clear();
+            navigate("/login");
+            toast.success(response.message, { autoClose: 500 });
+          });
       }
     });
   }
