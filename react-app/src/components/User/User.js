@@ -13,6 +13,7 @@ const User = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
+  const token = localStorage.getItem("auth-token")
 
   // PAGINATION
   const [PageSize] = useState(10);
@@ -24,29 +25,31 @@ const User = () => {
 
   useEffect(() => {
     // GET USERS LIST
-    fetch("http://localhost:8000/users", {
+    fetch("http://localhost:8000/api/users", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
       },
     })
-      .then((res) => res.json())
-      .then((data) => setUsers(data));
+      .then((res) => {
+        if (!res.ok) throw new Error(res.status);
+        else return res.json();
+      })
+      .then((data) => {
+        setUsers(data.users)
+      }
+      );
     // GET USERS LIST
 
-    // GET CURRENT USER
-    const parseJwt = async (token) => {
-      if (!token) {
-        return;
-      }
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace("-", "+").replace("_", "/");
-      const user = await JSON.parse(window.atob(base64));
-      setCurrentUser(user);
-    };
+    // // GET CURRENT USER
+    // const getCurrentUser = async () => {
+    //   setCurrentUser(user);
+    // };
 
-    parseJwt(localStorage.getItem("auth-token"));
-    // GET CURRENT USER
+    // getCurrentUser();
+    // // GET CURRENT USER
   }, []);
 
   // USER DELETE
@@ -63,15 +66,20 @@ const User = () => {
       confirmButtonText: "Delete",
     }).then((result) => {
       if (result.isConfirmed) {
-        return fetch("http://localhost:8000/users/" + id, {
+        return fetch("http://localhost:8000/api/users/" + id, {
           method: "DELETE",
           headers: {
-            "Content-Type": "application/json",
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
           },
         })
-          .then((data) => data.json())
+          .then((data) => {
+            if (!data.ok) throw new Error(data.status);
+            else return data.json();
+          })
           .then((response) => {
-            if (response.statusCode === 200) {
+            if (response) {
               const updatedUsers = users.filter((user) => user.id !== id);
               setUsers(updatedUsers);
               toast.success(response.message, { autoClose: 500 });
@@ -106,8 +114,6 @@ const User = () => {
             <th width="150">#</th>
             <th width="870">Name</th>
             <th width="870">Email</th>
-            <th width="550">Contact</th>
-            <th width="170">Gender</th>
             <th width="800">Created-At</th>
             <th width="200" className="text-center">
               Edit
@@ -122,10 +128,8 @@ const User = () => {
             return (
               <tr key={user.id}>
                 <td>{user.id}</td>
-                <td>{user.first_name + " " + user.last_name}</td>
+                <td>{user.name}</td>
                 <td>{user.email}</td>
-                <td>{user.contact}</td>
-                <td>{user.gender}</td>
                 <td>{user.created_at}</td>
                 <td className="text-center">
                   <Button
