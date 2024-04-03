@@ -1,8 +1,9 @@
 import React from "react";
 import "./Dashboard.css";
+import FeedbackCreateForm from "../Feedback/feedbackCreateForm";
 
 const Dashboard = () => {
-  return <div>Dashboard</div>;
+  return <FeedbackCreateForm />;
 };
 
 export default Dashboard;

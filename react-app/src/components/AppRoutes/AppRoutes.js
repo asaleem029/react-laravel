@@ -9,6 +9,8 @@ import UserCreateForm from "../User/UserCreateForm";
 import UserEditForm from "../User/UserEditForm";
 import UserRegistrationForm from "../UserRegistration/UserRegistrationForm";
 import Feedback from "../Feedback/feedback";
+import FeedbackCreateForm from "../Feedback/feedbackCreateForm";
+import FeedbackEditForm from "../Feedback/feedbackEditForm";
 
 const AppRoutes = () => {
   return (
@@ -24,10 +26,14 @@ const AppRoutes = () => {
             }
           >
             <Route index element={<Dashboard />} />
+
             <Route path="users" element={<User />} />
-            <Route path="feedbacks" element={<Feedback />} />
             <Route path="new-user" element={<UserCreateForm />} />
             <Route path="user-edit/:id" element={<UserEditForm />} />
+            
+            <Route path="feedbacks" element={<Feedback />} />
+            <Route path="new-feedback" element={<FeedbackCreateForm />} />
+            <Route path="feedback-edit/:id" element={<FeedbackEditForm />} />
           </Route>
           
           <Route path="user-registration" element={<UserRegistrationForm />} />
