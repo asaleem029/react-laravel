@@ -5,8 +5,10 @@ import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 
 function CommentEditModal(props) {
-
+  // GETTING AUTH TOKEN
   const token = localStorage.getItem("auth-token");
+
+  // INITIAL VALUES FOR FORM
   const intialValues = {
     comment: "",
     feedback_id: ""
@@ -32,7 +34,7 @@ function CommentEditModal(props) {
           else return data.json();
         })
         .then((response) => {
-          setFormValues(response)
+          setFormValues(response.comment) // SETTING FORM VALUES
         });
     // GET COMMENT INFO
   }, [commentId, setFormValues]);
@@ -75,20 +77,20 @@ function CommentEditModal(props) {
   };
   // HANDLE COMMENT UPDATE
 
-
   // HANDLE FORM SUBMIT
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmit(true);
-    await validate(formValues);
+    await validate(formValues); // VALIDATE FORM VALUES
 
     if (Object.keys(errors).length === 0) {
-      const comment = await updateComment(formValues);
+      const comment = await updateComment(formValues); // CALL COMMENT UPDATE FUNCTION
 
       if (comment) {
         setIsSubmit(true);
-        toast.success(comment.message, { autoClose: 1000 });
-        props.setModalShow(false)
+        toast.success(comment.message, { autoClose: 1000 }); // SHOW SUCCESS MESSAGE
+        props.setModalShow(false) // CLOSE MODAL
+        props.feedbackCommentSetter(comment.commentsList) // UPDATE COMMENTS LIST
       } else {
         setIsSubmit(false);
         toast.error(comment.message, { autoClose: 1000 });
@@ -112,11 +114,6 @@ function CommentEditModal(props) {
               handleSubmit(e);
             }}
           >
-            <Form.Control
-              type="hidden"
-              name="feedback_id"
-              value={formValues.comment.feedback_id}
-            />
 
             <Row className="mb-3">
               <Col>
@@ -124,7 +121,7 @@ function CommentEditModal(props) {
                   <Form.Control
                     type="text"
                     name="comment"
-                    value={formValues.comment.comment}
+                    value={formValues.comment}
                     onChange={handleChange}
                     className="form-control mt-1"
                     placeholder="Enter Comment"
@@ -140,7 +137,7 @@ function CommentEditModal(props) {
               <Row className="mb-3">
                 <Col>
                   <Button className="float-end" type="submit" variant="secondary">
-                    Submit
+                    Update
                   </Button>
                   <ToastContainer />
                 </Col>

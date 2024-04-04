@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import { Button, Card, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
@@ -162,13 +162,22 @@ function FeedbackView() {
   }
   // COMMENT EDIT
 
+  // REFRESH COMMENTS LIST AFTER COMMENT UPDATE
+  const updateCommentList = useCallback(val => {
+    setfeedbackComments(val);
+  }, [setfeedbackComments]);
+  // REFRESH COMMENTS LIST AFTER COMMENT UPDATE
+
   return (
     <Container>
       <CommentEditModal
         modalShow={modalShow}
         setModalShow={setModalShow}
         commentId={commentId}
-        setCommentId={setCommentId} />
+        setCommentId={setCommentId}
+        feedbackComments={feedbackComments}
+        feedbackCommentSetter={updateCommentList}
+        />
 
       <div className="user-form">
         <Form className="me-5 mt-4 ms-5">

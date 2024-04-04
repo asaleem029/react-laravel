@@ -78,14 +78,15 @@ class CommentService
 
             $comment = Comment::find($comment->id);
             if ($comment) {
-                $comment->comment = $data->comment ? $data->comment : $comment->comment;
+                $comment->comment = $data->comment;
                 $comment->feedback_id = $comment->feedback_id;
                 $comment->user_id = Auth::id();
 
                 if ($comment->save())
                     return response()->json([
                         'message' => 'Comment Updated',
-                        'comment' => $comment
+                        'comment' => $comment,
+                        'commentsList' => $comment->feedback->comments
                     ], 200);
             }
         } catch (Exception $e) {
