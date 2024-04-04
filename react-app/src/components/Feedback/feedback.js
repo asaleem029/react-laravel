@@ -137,6 +137,7 @@ const Feedback = () => {
                     onClick={async () => {
                       await handleFeedBackEdit(feedback.id);
                     }}
+                    disabled={auth_user_id != feedback.user_id}
                   >
                     <BiEdit />
                   </Button>
@@ -149,6 +150,7 @@ const Feedback = () => {
                     onClick={async () => {
                       await handleFeedbackDelete(feedback.id);
                     }}
+                    disabled={auth_user_id != feedback.user_id}
                   >
                     <MdDeleteForever />
                   </Button>
