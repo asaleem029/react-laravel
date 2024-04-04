@@ -35,3 +35,24 @@ tr {
     display: flex;
     justify-content: right;
 }
+
+.comment {
+    margin-top: -10px;
+    border: 1px solid #e4e4e4;
+    background-color: #e4e4e4;
+    border-radius: 5px;
+}
+
+.comment h4,
+.comment span,
+h4,
+span {
+    display: inline;
+}
+
+.comment p,
+.comment span,
+p,
+span {
+    color: rgb(100, 100, 100);
+}

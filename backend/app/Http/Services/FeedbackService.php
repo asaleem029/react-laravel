@@ -14,7 +14,7 @@ class FeedbackService
         try {
             $feedbacks = Feedback::all();
 
-            foreach($feedbacks as $f) {
+            foreach ($feedbacks as $f) {
                 $f->user_name = $f->user->name;
             }
 
@@ -60,6 +60,11 @@ class FeedbackService
     {
         try {
             $feedback = Feedback::find($id);
+            $feedback->comments = $feedback->comments;
+
+            foreach($feedback->comments as $fc) {
+                $fc->user_name=  $fc->user->name;
+            }
 
             if ($feedback)
                 return response()->json([
