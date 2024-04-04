@@ -12,8 +12,11 @@ class FeedbackService
     public function feedbacksList()
     {
         try {
-            $user_id = Auth::id();
-            $feedbacks = Feedback::where('user_id', $user_id)->get();
+            $feedbacks = Feedback::all();
+
+            foreach($feedbacks as $f) {
+                $f->user_name = $f->user->name;
+            }
 
             if ($feedbacks)
                 return response()->json([

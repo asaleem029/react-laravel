@@ -13,6 +13,7 @@ const Feedback = () => {
   const navigate = useNavigate();
   const [feedbacks, setFeedbacks] = useState([]);
   const token = localStorage.getItem("auth-token")
+  const auth_user_id = localStorage.getItem("user_id")
 
   // PAGINATION
   const [PageSize] = useState(10);
@@ -104,6 +105,7 @@ const Feedback = () => {
             <th width="870">Title</th>
             <th width="870">Description</th>
             <th width="800">Category</th>
+            <th width="800">Created By</th>
             <th width="800">Created At</th>
             <th width="200" className="text-center">
               Edit
@@ -120,7 +122,13 @@ const Feedback = () => {
                 <td>{index + 1}</td>
                 <td>{feedback.title}</td>
                 <td>{feedback.description}</td>
-                <td>{feedback.category}</td>
+                <td>
+                  {feedback.category == "bug_report" ? "Bug Report"
+                    : feedback.category == "feature_request" ? "Feature Request"
+                      : "Improvement"
+                  }
+                </td>
+                <td>{feedback.user_name}</td>
                 <td>{feedback.created_at}</td>
                 <td className="text-center">
                   <Button
