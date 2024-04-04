@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\CommentService;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -29,9 +30,9 @@ class CommentController extends Controller
         return $this->commentService->getComment($id);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, Comment $comment)
     {
-        return $this->commentService->updateComment($request);
+        return $this->commentService->updateComment($request, $comment);
     }
 
     public function destroy($id)

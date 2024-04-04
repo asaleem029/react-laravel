@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "./feedback.css";
@@ -8,6 +8,7 @@ import { BiEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import CommentEditModal from "./CommentEditModal";
 
 function FeedbackView() {
   const token = localStorage.getItem("auth-token")
@@ -115,8 +116,7 @@ function FeedbackView() {
   };
   // HANDLE FORM SUBMIT
 
-
-  // FEEDBACK DELETE
+  // COMMENT DELETE
   async function handleCommentDelete(id) {
     const MySwal = withReactContent(Swal);
 
@@ -150,10 +150,26 @@ function FeedbackView() {
       }
     });
   }
-  // FEEDBACK DELETE
+  // COMMENT DELETE
+
+  // COMMENT EDIT
+  const [modalShow, setModalShow] = useState(false);
+  const [commentId, setCommentId] = useState(false);
+
+  async function handleCommentEdit(id) {
+    setCommentId(id);
+    setModalShow(true);
+  }
+  // COMMENT EDIT
 
   return (
     <Container>
+      <CommentEditModal
+        modalShow={modalShow}
+        setModalShow={setModalShow}
+        commentId={commentId}
+        setCommentId={setCommentId} />
+
       <div className="user-form">
         <Form className="me-5 mt-4 ms-5">
           <Row className="mb-3">
@@ -180,7 +196,11 @@ function FeedbackView() {
                 <Form.Control
                   type="text"
                   name="description"
-                  value={feedbackValues.category}
+                  value={
+                    feedbackValues.category == "bug_report" ? "Bug Report"
+                      : feedbackValues.category == "feature_request" ? "Feature Request"
+                        : "Improvement"
+                  }
                   className="form-control mt-1"
                   disabled
                 />
@@ -239,27 +259,42 @@ function FeedbackView() {
             {
               feedbackComments.map((com) => {
                 return (
-                  <Card.Text>
-                    <div class="comment text-justify">
-                      <h8 className="mt-1 ms-1">{com.user_name}</h8>
-                      <span className="mt-1 ms-1"> - {new Date(com.created_at).toLocaleDateString()}</span>
+                  <div className="comment text-justify" key={com.id}>
+                    <div className="d-flex mt-1 ms-1">
+                      <p style={{ fontSize: "12px" }}>{com.user_name}</p>
+                      <span style={{ fontSize: "12px" }}> - {new Date(com.created_at).toLocaleDateString()}</span>
 
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        className="mt-1 me-1"
-                        style={{ float: 'right' }}
-                        onClick={async () => {
-                          await handleCommentDelete(com.id);
-                        }}
-                        disabled={auth_user_id != com.user_id}
-                      >
-                        <MdDeleteForever />
-                      </Button>
+                      <div className="me-1" style={{ marginLeft: 'auto' }}>
+                        <Button
+                          variant="light"
+                          size="sm"
+                          className="me-1"
+                          onClick={async () => {
+                            await handleCommentEdit(com.id);
+                          }}
+                          disabled={auth_user_id != com.user_id}
+                        >
+                          <BiEdit />
+                        </Button>
 
-                      <p className="mt-1 ms-1">{com.comment}</p>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={async () => {
+                            await handleCommentDelete(com.id);
+                          }}
+                          disabled={auth_user_id != com.user_id}
+                        >
+                          <MdDeleteForever />
+                        </Button>
+                      </div>
+
                     </div>
-                  </Card.Text>
+
+                    <Card.Text className="ms-1">
+                      {com.comment}
+                    </Card.Text>
+                  </div>
                 )
               })
             }

@@ -89,6 +89,8 @@ class FeedbackService
                 return response()->json($validator->errors()->toJson(), 400);
             }
 
+            echo $data->id;
+
             $feedback = Feedback::find($data->id);
             $feedback->title = $data->title;
             $feedback->description = $data->description;

@@ -64,28 +64,30 @@ class CommentService
         }
     }
 
-    public function updateComment($data)
+    public function updateComment($data, $comment)
     {
         try {
             // Validate request
             $validator = Validator::make($data->all(), [
-                'comment' => 'required|string|max:100',
+                'comment' => 'required|max:100',
             ]);
 
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toJson(), 400);
             }
 
-            $comment = Comment::find($data->id);
-            $comment->comment = $data->comment;
-            $comment->feedback_id = $data->feedback_id;
-            $comment->user_id = Auth::id();
-            $comment->save();
+            $comment = Comment::find($comment->id);
+            if ($comment) {
+                $comment->comment = $data->comment ? $data->comment : $comment->comment;
+                $comment->feedback_id = $comment->feedback_id;
+                $comment->user_id = Auth::id();
 
-            if ($comment)
-                return response()->json([
-                    'message' => 'Comment Updated',
-                ], 200);
+                if ($comment->save())
+                    return response()->json([
+                        'message' => 'Comment Updated',
+                        'comment' => $comment
+                    ], 200);
+            }
         } catch (Exception $e) {
             return $e->getMessage();
         }
