@@ -9,6 +9,8 @@ import { MdDeleteForever } from "react-icons/md";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import CommentEditModal from "./CommentEditModal";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 function FeedbackView() {
   const token = localStorage.getItem("auth-token")
@@ -37,11 +39,7 @@ function FeedbackView() {
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
+  const [usersList, setUsersList] = useState([]);
 
   useEffect(() => {
     // GET FEEDBACK INFO
@@ -62,6 +60,29 @@ function FeedbackView() {
         setfeedbackComments(response.feedback.comments)
       });
     // GET FEEDBACK INFO
+
+    // GET USERS LIST
+    fetch("http://localhost:8000/api/users", {
+      method: "GET",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+    })
+      .then((data) => {
+        if (!data.ok) throw new Error(data.status);
+        else return data.json();
+      })
+      .then((response) => {
+        let usersArray = []
+        response.users.map((user) => {
+          usersArray.push({ text: user.name, value: user.name })
+        })
+
+        setUsersList(usersArray);
+      });
+    // GET USERS LIST
   }, []);
 
   // FORM VALIDATION
@@ -106,7 +127,19 @@ function FeedbackView() {
 
       if (comment) {
         setIsSubmit(true);
-        document.getElementById("comment-form").reset();
+
+        // RESET COMMENT TEXTBOX AFTER SUBMITION OF COMMENT
+        let textBox = document.getElementsByClassName("public-DraftEditor-content")
+        let span = textBox[0].lastChild.lastChild.lastChild.lastChild.lastChild
+        span.innerHTML = " "
+
+        setFormValues({
+          ...formValues,
+          comment: "",
+          feedback_id: ""
+        });
+        // RESET COMMENT TEXTBOX AFTER SUBMITION OF COMMENT
+
         toast.success(comment.message, { autoClose: 1000 });
       } else {
         setIsSubmit(false);
@@ -168,6 +201,16 @@ function FeedbackView() {
   }, [setfeedbackComments]);
   // REFRESH COMMENTS LIST AFTER COMMENT UPDATE
 
+  // SET COMMENT FORM VALUES
+  const onEditorStateChange = function (editorState) {
+    setFormValues({
+      ...formValues,
+      comment: editorState.getCurrentContent().getPlainText("\u0001"),
+      feedback_id: feedback_id
+    });
+  };
+  // SET COMMENT FORM VALUES
+
   return (
     <Container>
       <CommentEditModal
@@ -177,7 +220,7 @@ function FeedbackView() {
         setCommentId={setCommentId}
         feedbackComments={feedbackComments}
         feedbackCommentSetter={updateCommentList}
-        />
+      />
 
       <div className="user-form">
         <Form className="me-5 mt-4 ms-5">
@@ -242,24 +285,29 @@ function FeedbackView() {
           }}
         >
 
-          <Form.Group className="mt-3" style={{ display: "flex" }} >
-            <Form.Control
-              type="text"
-              name="comment"
-              onChange={handleChange}
-              className="form-control mt-1"
-              placeholder="Enter Comment"
+          <Form.Group className="mt-3">
+            <Editor
+              formValues={formValues}
+              toolbarClassName="toolbarClassName"
+              wrapperClassName="wrapperClassName"
+              editorClassName="editorClassName"
+              onEditorStateChange={onEditorStateChange}
+              mention={{
+                separator: " ",
+                trigger: "@",
+                suggestions: usersList
+              }}
             />
+
+            <Form.Control.Feedback type="invalid">
+              {formErrors.comment}
+            </Form.Control.Feedback>
 
             <Button className="mt-1" type="submit" variant="secondary">
               Submit
             </Button>
             <ToastContainer />
           </Form.Group>
-
-          <Form.Control.Feedback type="invalid">
-            {formErrors.comment}
-          </Form.Control.Feedback>
         </Form>
 
         <Card className="mt-2 ms-5 me-5 mb-2" style={{ width: 'auto' }}>

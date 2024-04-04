@@ -56,3 +56,13 @@ p,
 span {
     color: rgb(100, 100, 100);
 }
+
+.rdw-editor-main {
+    height: 150px !important;
+    background-color: white !important;
+    overflow: hidden !important;
+}
+
+.rdw-suggestion-dropdown {
+    width: 250px !important;
+}
