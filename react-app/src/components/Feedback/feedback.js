@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Container, Table } from "react-bootstrap";
 import { MdDeleteForever } from "react-icons/md";
 import { BiEdit } from "react-icons/bi";
+import { FaEye } from "react-icons/fa";
 import "./feedback.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -86,6 +87,12 @@ const Feedback = () => {
   }
   // FEEDBACK EDIT
 
+  // FEEDBACK VIEW
+  async function handleFeedBackView(id) {
+    navigate("/feedback-view/" + id);
+  }
+  // FEEDBACK VIEW
+
   return (
     <Container fluid>
       <div className="user-create">
@@ -103,10 +110,11 @@ const Feedback = () => {
           <tr>
             <th width="150">#</th>
             <th width="870">Title</th>
-            <th width="870">Description</th>
             <th width="800">Category</th>
             <th width="800">Created By</th>
-            <th width="800">Created At</th>
+            <th width="200" className="text-center">
+              View
+            </th>
             <th width="200" className="text-center">
               Edit
             </th>
@@ -121,7 +129,6 @@ const Feedback = () => {
               <tr key={feedback.id}>
                 <td>{index + 1}</td>
                 <td>{feedback.title}</td>
-                <td>{feedback.description}</td>
                 <td>
                   {feedback.category == "bug_report" ? "Bug Report"
                     : feedback.category == "feature_request" ? "Feature Request"
@@ -129,7 +136,18 @@ const Feedback = () => {
                   }
                 </td>
                 <td>{feedback.user_name}</td>
-                <td>{feedback.created_at}</td>
+                <td className="text-center">
+                  <Button
+                    variant="light"
+                    size="sm"
+                    onClick={async () => {
+                      await handleFeedBackView(feedback.id);
+                    }}
+                  >
+                    <FaEye />
+                  </Button>
+                  <ToastContainer />
+                </td>
                 <td className="text-center">
                   <Button
                     variant="light"

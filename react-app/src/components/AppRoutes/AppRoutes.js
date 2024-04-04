@@ -11,6 +11,7 @@ import UserRegistrationForm from "../UserRegistration/UserRegistrationForm";
 import Feedback from "../Feedback/feedback";
 import FeedbackCreateForm from "../Feedback/feedbackCreateForm";
 import FeedbackEditForm from "../Feedback/feedbackEditForm";
+import FeedbackView from "../Feedback/feedbackView";
 
 const AppRoutes = () => {
   return (
@@ -34,6 +35,7 @@ const AppRoutes = () => {
             <Route path="feedbacks" element={<Feedback />} />
             <Route path="new-feedback" element={<FeedbackCreateForm />} />
             <Route path="feedback-edit/:id" element={<FeedbackEditForm />} />
+            <Route path="feedback-view/:id" element={<FeedbackView />} />
           </Route>
           
           <Route path="user-registration" element={<UserRegistrationForm />} />
