@@ -140,6 +140,9 @@ function FeedbackView() {
         });
         // RESET COMMENT TEXTBOX AFTER SUBMITION OF COMMENT
 
+        // REFRESH COMMENTS LIST AFTER SUBMITIION OF COMMENT
+        setfeedbackComments(comment.commentsList)
+
         toast.success(comment.message, { autoClose: 1000 });
       } else {
         setIsSubmit(false);
@@ -345,7 +348,6 @@ function FeedbackView() {
                           <MdDeleteForever />
                         </Button>
                       </div>
-
                     </div>
 
                     <Card.Text className="ms-1">

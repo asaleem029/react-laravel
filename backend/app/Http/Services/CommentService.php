@@ -38,12 +38,19 @@ class CommentService
             $input = $data->all();
             $input['user_id'] = Auth::id();
 
-            // Create new user
+            // Create new comment
             $comment = Comment::create($input);
+            $commentList = $comment->feedback->comments;
+
+            foreach($commentList as $comment) {
+                $comment->user_name = $comment->user->name;
+            }
 
             if ($comment)
                 return response()->json([
                     'message' => 'Comment Added',
+                    'comment' => $comment,
+                    'commentsList' => $commentList
                 ], 200);
         } catch (Exception $e) {
             return $e->getMessage();
