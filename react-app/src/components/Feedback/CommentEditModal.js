@@ -1,7 +1,9 @@
+import { ContentState, EditorState, convertFromHTML } from 'draft-js';
 import { useEffect, useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { Editor } from 'react-draft-wysiwyg';
 import { ToastContainer, toast } from 'react-toastify';
 
 function CommentEditModal(props) {
@@ -38,13 +40,6 @@ function CommentEditModal(props) {
         });
     // GET COMMENT INFO
   }, [commentId, setFormValues]);
-
-  // HANDLE FORM CHANGE VALUES
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
-  // HANDLE FORM CHANGE VALUES
 
   // FORM VALIDATION
   const errors = {};
@@ -99,6 +94,21 @@ function CommentEditModal(props) {
   };
   // HANDLE FORM SUBMIT
 
+  // SET COMMENT FORM VALUES
+  const onEditorStateChange = function (editorState) {
+    setFormValues({
+      ...formValues,
+      comment: editorState.getCurrentContent().getPlainText("\u0001"),
+    });
+  };
+  // SET COMMENT FORM VALUES
+
+  const editorState = EditorState.createWithContent(
+    ContentState.createFromBlockArray(
+      convertFromHTML('<p>' + formValues.comment + '</p>')
+    )
+  );
+
   return (
     <>
       <Modal
@@ -118,14 +128,20 @@ function CommentEditModal(props) {
             <Row className="mb-3">
               <Col>
                 <Form.Group className="form-group mt-3">
-                  <Form.Control
-                    type="text"
-                    name="comment"
-                    value={formValues.comment}
-                    onChange={handleChange}
-                    className="form-control mt-1"
-                    placeholder="Enter Comment"
+                  <Editor
+                    editorState={editorState}
+                    formValues={formValues}
+                    toolbarClassName="toolbarClassName"
+                    wrapperClassName="wrapperClassName"
+                    editorClassName="editorClassName"
+                    onEditorStateChange={onEditorStateChange}
+                    mention={{
+                      separator: " ",
+                      trigger: "@",
+                      suggestions: props.usersList
+                    }}
                   />
+
                   <Form.Control.Feedback type="invalid">
                     {formErrors.comment}
                   </Form.Control.Feedback>

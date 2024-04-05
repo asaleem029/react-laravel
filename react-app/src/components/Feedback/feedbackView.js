@@ -223,6 +223,8 @@ function FeedbackView() {
         setCommentId={setCommentId}
         feedbackComments={feedbackComments}
         feedbackCommentSetter={updateCommentList}
+        usersList={usersList}
+        setUsersList={setUsersList}
       />
 
       <div className="user-form">
